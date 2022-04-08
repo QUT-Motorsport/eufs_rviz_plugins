@@ -122,7 +122,7 @@ test:
     - shopt -u extglob dotglob
   script:
     - . /opt/ros/$ROS_DISTRO/setup.sh
-    - colcon test --packages-skip evaluator_scripts --base-paths $PROJECT_BASE_DIR --return-code-on-test-failure
+    - colcon test --base-paths $PROJECT_BASE_DIR --return-code-on-test-failure
   after_script:
     - colcon test-result --all | grep xml | cut -d":" -f1 | xargs $PROJECT_BASE_DIR/.gitlab-ci/merge-test-results $CI_PROJECT_DIR/test-results.xml > /dev/null
   variables:

@@ -56,9 +56,8 @@ void WaypointArrayStampedDisplay::initMarkers() {
   delete_all_marker_.action = visualization_msgs::msg::Marker::DELETEALL;
 }
 
-visualization_msgs::msg::Marker
- WaypointArrayStampedDisplay::CreateTrajectoryMarker(
-    const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg){
+visualization_msgs::msg::Marker WaypointArrayStampedDisplay::CreateTrajectoryMarker(
+    const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg) {
     visualization_msgs::msg::Marker trajectory_marker;
     trajectory_marker.action = visualization_msgs::msg::Marker::ADD;
     trajectory_marker.type = visualization_msgs::msg::Marker::SPHERE_LIST;
@@ -81,7 +80,6 @@ visualization_msgs::msg::Marker
 
 void WaypointArrayStampedDisplay::setMarkerArray(
     const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg) {
-  
   auto trajectory_marker = CreateTrajectoryMarker(msg);
   for (auto waypoint : msg->waypoints) {
     geometry_msgs::msg::Point p;

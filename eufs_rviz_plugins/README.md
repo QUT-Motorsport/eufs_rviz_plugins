@@ -14,6 +14,9 @@ can be used as inspiration to make specific plugins.
 allows visualisations of cones and their covariance. However, in RViz, the cone and covariance 
 visuals can individually be toggled under the namespace property in the display panel.
 
+- #### WaypointArrayStampedDisplay
+  This plugin provides a visualisation for the `eufs_msg::msg::WaypointArrayStamped` message. 
+
 ### Tools
 
 ### View Controllers

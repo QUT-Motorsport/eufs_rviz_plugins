@@ -44,7 +44,6 @@ class WaypointArrayStampedDisplay
 
   std::unique_ptr<rviz_default_plugins::displays::MarkerCommon> marker_common_;
 
-  visualization_msgs::msg::Marker trajectory_marker_;
   visualization_msgs::msg::Marker delete_all_marker_;
   visualization_msgs::msg::MarkerArray marker_array_;
 };

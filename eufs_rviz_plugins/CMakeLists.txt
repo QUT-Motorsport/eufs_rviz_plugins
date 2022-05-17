@@ -14,6 +14,7 @@ find_package(rviz_default_plugins REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(eufs_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
@@ -22,12 +23,14 @@ set(dependencies
         pluginlib
         rviz_common
         rviz_default_plugins
+        geometry_msgs
         std_msgs
         visualization_msgs
         eufs_msgs)
 
 set(sources
-        src/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.cpp)
+        src/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.cpp
+        src/eufs_rviz_plugins/displays/waypoint_array_stamped/waypoint_array_stamped_display.cpp)
 
 add_library(${PROJECT_NAME} SHARED
         ${sources})

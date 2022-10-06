@@ -10,22 +10,19 @@
 #include <vector>
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
-#include "rviz_default_plugins/visibility_control.hpp"
 
 #include "eufs_msgs/msg/cone_array_with_covariance.hpp"
+#include "rviz_default_plugins/visibility_control.hpp"
 
 namespace eufs_rviz_plugins {
 namespace displays {
 
-enum ConeColorOption {
-  CONE = 0,
-  FLAT = 1
-};
+enum ConeColorOption { CONE = 0, FLAT = 1 };
 
 class ConeArrayWithCovarianceDisplay
     : public rviz_common::RosTopicDisplay<eufs_msgs::msg::ConeArrayWithCovariance> {
- Q_OBJECT
- 
+  Q_OBJECT
+
  public:
   ConeArrayWithCovarianceDisplay();
 

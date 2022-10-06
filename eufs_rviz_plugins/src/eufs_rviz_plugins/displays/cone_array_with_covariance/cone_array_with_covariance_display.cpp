@@ -14,14 +14,14 @@ ConeArrayWithCovarianceDisplay::ConeArrayWithCovarianceDisplay()
   color_option_property_->addOption("Cone", ConeColorOption::CONE);
   color_option_property_->addOption("Flat", ConeColorOption::FLAT);
 
-  color_property_ = new rviz_common::properties::ColorProperty(
-    "Color", QColor(200, 200, 200), "Color of cones to display", this
-  );
+  color_property_ = new rviz_common::properties::ColorProperty("Color", QColor(200, 200, 200),
+                                                               "Color of cones to display", this);
   color_property_->hide();
 }
 
 void ConeArrayWithCovarianceDisplay::updateColorOption() {
-  ConeColorOption color_option = static_cast<ConeColorOption>(color_option_property_->getOptionInt());
+  ConeColorOption color_option =
+      static_cast<ConeColorOption>(color_option_property_->getOptionInt());
   cone_color_option_ = color_option;
   switch (color_option) {
     case CONE:
@@ -224,11 +224,11 @@ void ConeArrayWithCovarianceDisplay::setCovarianceMarker(
   covariance_marker_.scale.z = 0.01;
 }
 
-visualization_msgs::msg::Marker ConeArrayWithCovarianceDisplay::getColoredMarker(visualization_msgs::msg::Marker cone_marker) {
+visualization_msgs::msg::Marker ConeArrayWithCovarianceDisplay::getColoredMarker(
+    visualization_msgs::msg::Marker cone_marker) {
   visualization_msgs::msg::Marker marker = cone_marker;
-  switch(cone_color_option_) {
-    case FLAT:
-    {
+  switch (cone_color_option_) {
+    case FLAT: {
       QColor color = color_property_->getColor();
       marker.color.r = static_cast<float>(color.red()) / 255.0f;
       marker.color.g = static_cast<float>(color.green()) / 255.0f;
@@ -242,7 +242,6 @@ visualization_msgs::msg::Marker ConeArrayWithCovarianceDisplay::getColoredMarker
 
 void ConeArrayWithCovarianceDisplay::setMarkerArray(
     const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr &msg) {
-  
   for (const auto &cone : msg->blue_cones) {
     setConeMarker(cone, msg->header, id_, &blue_cone_marker_);
     setCovarianceMarker(cone, msg->header, id_);

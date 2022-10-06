@@ -1,17 +1,16 @@
-#include <Eigen/Eigen>
 #include "eufs_rviz_plugins/displays/waypoint_array_stamped/waypoint_array_stamped_display.hpp"  // NOLINT
+
+#include <Eigen/Eigen>
 
 namespace eufs_rviz_plugins {
 namespace displays {
 
 WaypointArrayStampedDisplay::WaypointArrayStampedDisplay()
-    : rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped>()
-    , id_(0)
-    , marker_common_(std::make_unique<rviz_default_plugins::displays::MarkerCommon>(this)) { 
-
-  color_property_ = new rviz_common::properties::ColorProperty(
-    "Color", QColor(100, 204, 153), "Color of waypoint array", this
-  );
+    : rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped>(),
+      id_(0),
+      marker_common_(std::make_unique<rviz_default_plugins::displays::MarkerCommon>(this)) {
+  color_property_ = new rviz_common::properties::ColorProperty("Color", QColor(100, 204, 153),
+                                                               "Color of waypoint array", this);
 }
 
 void WaypointArrayStampedDisplay::onInitialize() {
@@ -24,8 +23,7 @@ void WaypointArrayStampedDisplay::onInitialize() {
   initMarkers();
 }
 
-void WaypointArrayStampedDisplay::load(
-    const rviz_common::Config &config) {
+void WaypointArrayStampedDisplay::load(const rviz_common::Config &config) {
   Display::load(config);
   marker_common_->load(config);
 }
@@ -46,9 +44,7 @@ void WaypointArrayStampedDisplay::processMessage(
   marker_array_.markers.clear();
 }
 
-void WaypointArrayStampedDisplay::update(
-    float wall_dt,
-    float ros_dt) {
+void WaypointArrayStampedDisplay::update(float wall_dt, float ros_dt) {
   marker_common_->update(wall_dt, ros_dt);
 }
 
@@ -63,27 +59,27 @@ void WaypointArrayStampedDisplay::initMarkers() {
 
 visualization_msgs::msg::Marker WaypointArrayStampedDisplay::CreateTrajectoryMarker(
     const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg) {
-    visualization_msgs::msg::Marker trajectory_marker;
-    trajectory_marker.action = visualization_msgs::msg::Marker::ADD;
-    trajectory_marker.type = visualization_msgs::msg::Marker::SPHERE_LIST;
-    trajectory_marker.pose.orientation.x = 0.0;
-    trajectory_marker.pose.orientation.y = 0.0;
-    trajectory_marker.pose.orientation.z = 0.0;
-    trajectory_marker.pose.orientation.w = 1.0;
-    trajectory_marker.scale.x = 0.3;
-    trajectory_marker.scale.y = 0.3;
-    trajectory_marker.scale.z = 0.3;
+  visualization_msgs::msg::Marker trajectory_marker;
+  trajectory_marker.action = visualization_msgs::msg::Marker::ADD;
+  trajectory_marker.type = visualization_msgs::msg::Marker::SPHERE_LIST;
+  trajectory_marker.pose.orientation.x = 0.0;
+  trajectory_marker.pose.orientation.y = 0.0;
+  trajectory_marker.pose.orientation.z = 0.0;
+  trajectory_marker.pose.orientation.w = 1.0;
+  trajectory_marker.scale.x = 0.3;
+  trajectory_marker.scale.y = 0.3;
+  trajectory_marker.scale.z = 0.3;
 
-    QColor color = color_property_->getColor();
-    trajectory_marker.color.r = static_cast<float>(color.red()) / 255.0f;
-    trajectory_marker.color.g = static_cast<float>(color.green()) / 255.0f;
-    trajectory_marker.color.b = static_cast<float>(color.blue()) / 255.0f;
-    trajectory_marker.color.a = 1.0;
-    
-    trajectory_marker.ns = "waypoint";
-    trajectory_marker.header = msg->header;
+  QColor color = color_property_->getColor();
+  trajectory_marker.color.r = static_cast<float>(color.red()) / 255.0f;
+  trajectory_marker.color.g = static_cast<float>(color.green()) / 255.0f;
+  trajectory_marker.color.b = static_cast<float>(color.blue()) / 255.0f;
+  trajectory_marker.color.a = 1.0;
 
-    return trajectory_marker;
+  trajectory_marker.ns = "waypoint";
+  trajectory_marker.header = msg->header;
+
+  return trajectory_marker;
 }
 
 void WaypointArrayStampedDisplay::setMarkerArray(
@@ -103,6 +99,5 @@ void WaypointArrayStampedDisplay::setMarkerArray(
 }  // namespace eufs_rviz_plugins
 
 #include <pluginlib/class_list_macros.hpp>
-PLUGINLIB_EXPORT_CLASS(
-    eufs_rviz_plugins::displays::WaypointArrayStampedDisplay,
-    rviz_common::Display)
+PLUGINLIB_EXPORT_CLASS(eufs_rviz_plugins::displays::WaypointArrayStampedDisplay,
+                       rviz_common::Display)

@@ -1,15 +1,16 @@
 #ifndef EUFS_RVIZ_PLUGINS_INCLUDE_EUFS_RVIZ_PLUGINS_DISPLAYS_WAYPOINT_ARRAY_STAMPED_WAYPOINT_ARRAY_STAMPED_DISPLAY_HPP_  // NOLINT
 #define EUFS_RVIZ_PLUGINS_INCLUDE_EUFS_RVIZ_PLUGINS_DISPLAYS_WAYPOINT_ARRAY_STAMPED_WAYPOINT_ARRAY_STAMPED_DISPLAY_HPP_  // NOLINT
 
+#include <geometry_msgs/msg/point.hpp>
 #include <memory>
-#include <vector>
-#include <rviz_common/ros_topic_display.hpp>
 #include <rviz_common/properties/color_property.hpp>
+#include <rviz_common/ros_topic_display.hpp>
 #include <rviz_default_plugins/displays/marker/marker_common.hpp>
 #include <std_msgs/msg/header.hpp>
-#include <geometry_msgs/msg/point.hpp>
+#include <vector>
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
+
 #include "eufs_msgs/msg/waypoint_array_stamped.hpp"
 
 namespace eufs_rviz_plugins {
@@ -17,15 +18,14 @@ namespace displays {
 
 class WaypointArrayStampedDisplay
     : public rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped> {
- Q_OBJECT
+  Q_OBJECT
 
  public:
   WaypointArrayStampedDisplay();
 
   void onInitialize() override;
 
-  void load(
-      const rviz_common::Config & config) override;
+  void load(const rviz_common::Config &config) override;
 
   void update(float wall_dt, float ros_dt) override;
 
@@ -34,18 +34,16 @@ class WaypointArrayStampedDisplay
  private:
   void initMarkers();
 
-  void setMarkerArray(
-      const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
+  void setMarkerArray(const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
 
-  void processMessage(
-      eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr msg) override;
+  void processMessage(eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr msg) override;
 
   visualization_msgs::msg::Marker CreateTrajectoryMarker(
-    const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
+      const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
 
   int id_;
 
-  rviz_common::properties::ColorProperty* color_property_;
+  rviz_common::properties::ColorProperty *color_property_;
 
   std::unique_ptr<rviz_default_plugins::displays::MarkerCommon> marker_common_;
 
@@ -56,4 +54,5 @@ class WaypointArrayStampedDisplay
 }  // namespace displays
 }  // namespace eufs_rviz_plugins
 
-#endif  // EUFS_RVIZ_PLUGINS_INCLUDE_EUFS_RVIZ_PLUGINS_DISPLAYS_WAYPOINT_ARRAY_STAMPED_WAYPOINT_ARRAY_STAMPED_DISPLAY_HPP_  // NOLINT
+#endif  // EUFS_RVIZ_PLUGINS_INCLUDE_EUFS_RVIZ_PLUGINS_DISPLAYS_WAYPOINT_ARRAY_STAMPED_WAYPOINT_ARRAY_STAMPED_DISPLAY_HPP_
+        // // NOLINT

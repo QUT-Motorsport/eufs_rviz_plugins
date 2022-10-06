@@ -203,38 +203,28 @@ void ConeArrayWithCovarianceDisplay::setCovarianceMarker(
   covariance_marker_.pose.position.z = cone.point.z;
 
   // Convert the covariance message to a matrix
-  Eigen::Matrix2f covariance_matrix;
-  covariance_matrix << static_cast<float>(cone.covariance[0]),
-      static_cast<float>(cone.covariance[1]),
-      static_cast<float>(cone.covariance[2]),
-      static_cast<float>(cone.covariance[3]);
+  Eigen::Matrix2d cov_matrix;
+  cov_matrix << static_cast<float>(cone.covariance[0]),
+    static_cast<float>(cone.covariance[1]),
+    static_cast<float>(cone.covariance[2]),
+    static_cast<float>(cone.covariance[3]);
 
-  // Solve the covariance matrix for eigenvectors and eigenvalues
-  // Although a positive semi-definite matrix cannot have complex eigenstuff, we
-  // discard any imaginary parts that might have appeared by computational
-  // errors
-  Eigen::EigenSolver<Eigen::MatrixXf> eigensolver;
-  eigensolver.compute(covariance_matrix);
-  Eigen::Vector2f eigenvalues = eigensolver.eigenvalues().real();
-  Eigen::Matrix2f eigenvectors = eigensolver.eigenvectors().real();
-
-  // Get the rotation matrix from the eigenvectors and place it in 3-D.
-  Eigen::Matrix3f rotation_matrix;
-  rotation_matrix << eigenvectors(0, 0), eigenvectors(0, 1), 0,
-      eigenvectors(1, 0), eigenvectors(1, 1), 0, 0, 0, 1;
-
-  // Make quaternion from rotation matrix and add it to the marker message
-  Eigen::Quaternionf quaternion(rotation_matrix);
-
-  covariance_marker_.pose.orientation.x = quaternion.x();
-  covariance_marker_.pose.orientation.y = quaternion.y();
-  covariance_marker_.pose.orientation.z = quaternion.z();
-  covariance_marker_.pose.orientation.w = quaternion.w();
-
-  // Make the scale from the eigenvalues to be the 95% confidence ellipse
-  covariance_marker_.scale.x = 2 * sqrt(5.991 * eigenvalues(0));
-  covariance_marker_.scale.y = 2 * sqrt(5.991 * eigenvalues(1));
+  Eigen::SelfAdjointEigenSolver<Eigen::Matrix2d> eig(cov_matrix);
+  const Eigen::Vector2d& eigValues(eig.eigenvalues());
+  const Eigen::Matrix2d& eigVectors(eig.eigenvectors());
+  double x_scale = 2 * std::sqrt(5.991 * eigValues[0]);
+  double y_scale = 2 * std::sqrt(5.991 * eigValues[1]);
+  covariance_marker_.scale.x = x_scale;
+  covariance_marker_.scale.y = y_scale;
   covariance_marker_.scale.z = 0.01;
+  // Angle between x-axis and first eigenvector
+  double angle = std::atan2(eigVectors(1, 0), eigVectors(0, 0));
+  // Rotate ellipse such that x-axis is aligned with first eignevector
+  // See: https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Intuition
+  covariance_marker_.pose.orientation.x = 0;
+  covariance_marker_.pose.orientation.y = 0;
+  covariance_marker_.pose.orientation.z = std::sin(angle * 0.5);
+  covariance_marker_.pose.orientation.w = std::cos(angle * 0.5);
 }
 
 visualization_msgs::msg::Marker

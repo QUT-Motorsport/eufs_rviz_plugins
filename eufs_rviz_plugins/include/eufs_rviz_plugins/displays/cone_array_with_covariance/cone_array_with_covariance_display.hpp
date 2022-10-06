@@ -35,7 +35,7 @@ class ConeArrayWithCovarianceDisplay
 
   void reset() override;
 
- private Q_SLOTS:
+private Q_SLOTS:
   void updateColorOption();
 
  private:

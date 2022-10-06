@@ -7,7 +7,12 @@ namespace displays {
 WaypointArrayStampedDisplay::WaypointArrayStampedDisplay()
     : rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped>()
     , id_(0)
-    , marker_common_(std::make_unique<rviz_default_plugins::displays::MarkerCommon>(this)) { }
+    , marker_common_(std::make_unique<rviz_default_plugins::displays::MarkerCommon>(this)) { 
+
+  color_property_ = new rviz_common::properties::ColorProperty(
+    "Color", QColor(100, 204, 153), "Color of waypoint array", this
+  );
+}
 
 void WaypointArrayStampedDisplay::onInitialize() {
   RTDClass::onInitialize();
@@ -68,10 +73,13 @@ visualization_msgs::msg::Marker WaypointArrayStampedDisplay::CreateTrajectoryMar
     trajectory_marker.scale.x = 0.3;
     trajectory_marker.scale.y = 0.3;
     trajectory_marker.scale.z = 0.3;
-    trajectory_marker.color.r = 0.39;
-    trajectory_marker.color.g = 0.8;
-    trajectory_marker.color.b = 0.6;
+
+    QColor color = color_property_->getColor();
+    trajectory_marker.color.r = static_cast<float>(color.red()) / 255.0f;
+    trajectory_marker.color.g = static_cast<float>(color.green()) / 255.0f;
+    trajectory_marker.color.b = static_cast<float>(color.blue()) / 255.0f;
     trajectory_marker.color.a = 1.0;
+    
     trajectory_marker.ns = "waypoint";
     trajectory_marker.header = msg->header;
 

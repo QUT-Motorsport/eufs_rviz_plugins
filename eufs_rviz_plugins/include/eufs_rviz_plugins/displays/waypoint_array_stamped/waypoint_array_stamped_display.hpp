@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <rviz_common/ros_topic_display.hpp>
+#include <rviz_common/properties/color_property.hpp>
 #include <rviz_default_plugins/displays/marker/marker_common.hpp>
 #include <std_msgs/msg/header.hpp>
 #include <geometry_msgs/msg/point.hpp>
@@ -16,6 +17,8 @@ namespace displays {
 
 class WaypointArrayStampedDisplay
     : public rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped> {
+ Q_OBJECT
+
  public:
   WaypointArrayStampedDisplay();
 
@@ -41,6 +44,8 @@ class WaypointArrayStampedDisplay
     const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
 
   int id_;
+
+  rviz_common::properties::ColorProperty* color_property_;
 
   std::unique_ptr<rviz_default_plugins::displays::MarkerCommon> marker_common_;
 

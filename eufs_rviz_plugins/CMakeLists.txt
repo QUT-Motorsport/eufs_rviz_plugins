@@ -32,12 +32,18 @@ set(sources
         src/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.cpp
         src/eufs_rviz_plugins/displays/waypoint_array_stamped/waypoint_array_stamped_display.cpp)
 
+qt5_wrap_cpp(qt_moc_files "include/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.hpp") 
+qt5_wrap_cpp(qt_moc_files "include/eufs_rviz_plugins/displays/waypoint_array_stamped/waypoint_array_stamped_display.hpp") 
+
 add_library(${PROJECT_NAME} SHARED
+        ${qt_moc_files}
         ${sources})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
+        $<INSTALL_INTERFACE:include/${PROJECT_NAME}>
+        ${Qt5Widgets_INCLUDE_DIRS}
+        )
 
 target_link_libraries(${PROJECT_NAME}
         Eigen3::Eigen)

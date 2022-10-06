@@ -1,26 +1,53 @@
-#include <Eigen/Eigen>
 #include "eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.hpp"  // NOLINT
+
+#include <Eigen/Eigen>
 
 namespace eufs_rviz_plugins {
 namespace displays {
 
 ConeArrayWithCovarianceDisplay::ConeArrayWithCovarianceDisplay()
-    : rviz_common::RosTopicDisplay<eufs_msgs::msg::ConeArrayWithCovariance>()
-    , id_(0)
-    , marker_common_(std::make_unique<rviz_default_plugins::displays::MarkerCommon>(this)) { }
+    : rviz_common::RosTopicDisplay<eufs_msgs::msg::ConeArrayWithCovariance>(),
+      id_(0),
+      marker_common_(
+          std::make_unique<rviz_default_plugins::displays::MarkerCommon>(
+              this)) {
+  color_option_property_ = new rviz_common::properties::EnumProperty(
+      "Color Display", "Cone", "Cone colour to use", this,
+      SLOT(updateColorOption()));
+  color_option_property_->addOption("Cone", ConeColorOption::CONE);
+  color_option_property_->addOption("Flat", ConeColorOption::FLAT);
+
+  color_property_ = new rviz_common::properties::ColorProperty(
+      "Color", QColor(200, 200, 200), "Color of cones to display", this);
+  color_property_->hide();
+}
+
+void ConeArrayWithCovarianceDisplay::updateColorOption() {
+  ConeColorOption color_option =
+      static_cast<ConeColorOption>(color_option_property_->getOptionInt());
+  cone_color_option_ = color_option;
+  switch (color_option) {
+    case CONE:
+      color_property_->hide();
+      break;
+    case FLAT:
+      color_property_->show();
+      break;
+  }
+}
 
 void ConeArrayWithCovarianceDisplay::onInitialize() {
   RTDClass::onInitialize();
   marker_common_->initialize(context_, scene_node_);
 
   topic_property_->setValue("/cones");
-  topic_property_->setDescription("eufs_msgs::msg::ConeArrayWithCovariance topic to subscribe to.");
+  topic_property_->setDescription(
+      "eufs_msgs::msg::ConeArrayWithCovariance topic to subscribe to.");
 
   initMarkers();
 }
 
-void ConeArrayWithCovarianceDisplay::load(
-    const rviz_common::Config &config) {
+void ConeArrayWithCovarianceDisplay::load(const rviz_common::Config &config) {
   Display::load(config);
   marker_common_->load(config);
 }
@@ -31,19 +58,19 @@ void ConeArrayWithCovarianceDisplay::processMessage(
   delete_all_marker_.id = id_;
   marker_array_.markers.push_back(delete_all_marker_);
 
-  marker_common_->addMessage(std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
+  marker_common_->addMessage(
+      std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
 
   marker_array_.markers.clear();
 
   setMarkerArray(msg);
-  marker_common_->addMessage(std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
+  marker_common_->addMessage(
+      std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
 
   marker_array_.markers.clear();
 }
 
-void ConeArrayWithCovarianceDisplay::update(
-    float wall_dt,
-    float ros_dt) {
+void ConeArrayWithCovarianceDisplay::update(float wall_dt, float ros_dt) {
   marker_common_->update(wall_dt, ros_dt);
 }
 
@@ -64,7 +91,8 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
   blue_cone_marker_.scale.x = 1.0;
   blue_cone_marker_.scale.y = 1.0;
   blue_cone_marker_.scale.z = 1.0;
-  blue_cone_marker_.mesh_resource = "package://eufs_rviz_plugins/meshes/cone.dae";
+  blue_cone_marker_.mesh_resource =
+      "package://eufs_rviz_plugins/meshes/cone.dae";
   blue_cone_marker_.color.r = 0.0;
   blue_cone_marker_.color.g = 0.0;
   blue_cone_marker_.color.b = 1.0;
@@ -80,7 +108,8 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
   yellow_cone_marker_.scale.x = 1.0;
   yellow_cone_marker_.scale.y = 1.0;
   yellow_cone_marker_.scale.z = 1.0;
-  yellow_cone_marker_.mesh_resource = "package://eufs_rviz_plugins/meshes/cone.dae";
+  yellow_cone_marker_.mesh_resource =
+      "package://eufs_rviz_plugins/meshes/cone.dae";
   yellow_cone_marker_.color.r = 1.0;
   yellow_cone_marker_.color.g = 1.0;
   yellow_cone_marker_.color.b = 0.0;
@@ -96,7 +125,8 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
   orange_cone_marker_.scale.x = 1.0;
   orange_cone_marker_.scale.y = 1.0;
   orange_cone_marker_.scale.z = 1.0;
-  orange_cone_marker_.mesh_resource = "package://eufs_rviz_plugins/meshes/cone.dae";
+  orange_cone_marker_.mesh_resource =
+      "package://eufs_rviz_plugins/meshes/cone.dae";
   orange_cone_marker_.color.r = 1.0;
   orange_cone_marker_.color.g = 0.549;
   orange_cone_marker_.color.b = 0.0;
@@ -112,7 +142,8 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
   big_orange_cone_marker_.scale.x = 1.0;
   big_orange_cone_marker_.scale.y = 1.0;
   big_orange_cone_marker_.scale.z = 1.0;
-  big_orange_cone_marker_.mesh_resource = "package://eufs_rviz_plugins/meshes/big_cone.dae";
+  big_orange_cone_marker_.mesh_resource =
+      "package://eufs_rviz_plugins/meshes/big_cone.dae";
   big_orange_cone_marker_.color.r = 1.0;
   big_orange_cone_marker_.color.g = 0.271;
   big_orange_cone_marker_.color.b = 0.0;
@@ -127,7 +158,8 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
   unknown_cone_marker_.scale.x = 1.0;
   unknown_cone_marker_.scale.y = 1.0;
   unknown_cone_marker_.scale.z = 1.0;
-  unknown_cone_marker_.mesh_resource = "package://eufs_rviz_plugins/meshes/cone.dae";
+  unknown_cone_marker_.mesh_resource =
+      "package://eufs_rviz_plugins/meshes/cone.dae";
   unknown_cone_marker_.color.r = 0.0;
   unknown_cone_marker_.color.g = 1.0;
   unknown_cone_marker_.color.b = 0.0;
@@ -151,8 +183,7 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
 
 void ConeArrayWithCovarianceDisplay::setConeMarker(
     const eufs_msgs::msg::ConeWithCovariance &cone,
-    const std_msgs::msg::Header &header,
-    const int &id,
+    const std_msgs::msg::Header &header, const int &id,
     visualization_msgs::msg::Marker *marker) {
   marker->id = id;
   marker->header = header;
@@ -163,8 +194,7 @@ void ConeArrayWithCovarianceDisplay::setConeMarker(
 
 void ConeArrayWithCovarianceDisplay::setCovarianceMarker(
     const eufs_msgs::msg::ConeWithCovariance &cone,
-    const std_msgs::msg::Header &header,
-    const int &id) {
+    const std_msgs::msg::Header &header, const int &id) {
   // https://www.visiondummy.com/2014/04/draw-error-ellipse-representing-covariance-matrix/
   covariance_marker_.id = id;
   covariance_marker_.header = header;
@@ -174,13 +204,15 @@ void ConeArrayWithCovarianceDisplay::setCovarianceMarker(
 
   // Convert the covariance message to a matrix
   Eigen::Matrix2f covariance_matrix;
-  covariance_matrix <<
-  static_cast<float>(cone.covariance[0]), static_cast<float>(cone.covariance[1]),
-  static_cast<float>(cone.covariance[2]), static_cast<float>(cone.covariance[3]);
+  covariance_matrix << static_cast<float>(cone.covariance[0]),
+      static_cast<float>(cone.covariance[1]),
+      static_cast<float>(cone.covariance[2]),
+      static_cast<float>(cone.covariance[3]);
 
   // Solve the covariance matrix for eigenvectors and eigenvalues
-  // Although a positive semi-definite matrix cannot have complex eigenstuff, we discard any
-  // imaginary parts that might have appeared by computational errors
+  // Although a positive semi-definite matrix cannot have complex eigenstuff, we
+  // discard any imaginary parts that might have appeared by computational
+  // errors
   Eigen::EigenSolver<Eigen::MatrixXf> eigensolver;
   eigensolver.compute(covariance_matrix);
   Eigen::Vector2f eigenvalues = eigensolver.eigenvalues().real();
@@ -188,10 +220,8 @@ void ConeArrayWithCovarianceDisplay::setCovarianceMarker(
 
   // Get the rotation matrix from the eigenvectors and place it in 3-D.
   Eigen::Matrix3f rotation_matrix;
-  rotation_matrix <<
-  eigenvectors(0, 0), eigenvectors(0, 1), 0,
-  eigenvectors(1, 0), eigenvectors(1, 1), 0,
-  0, 0, 1;
+  rotation_matrix << eigenvectors(0, 0), eigenvectors(0, 1), 0,
+      eigenvectors(1, 0), eigenvectors(1, 1), 0, 0, 0, 1;
 
   // Make quaternion from rotation matrix and add it to the marker message
   Eigen::Quaternionf quaternion(rotation_matrix);
@@ -207,40 +237,62 @@ void ConeArrayWithCovarianceDisplay::setCovarianceMarker(
   covariance_marker_.scale.z = 0.01;
 }
 
+visualization_msgs::msg::Marker
+ConeArrayWithCovarianceDisplay::getColoredMarker(
+    visualization_msgs::msg::Marker cone_marker) {
+  visualization_msgs::msg::Marker marker = cone_marker;
+  switch (cone_color_option_) {
+    case FLAT: {
+      QColor color = color_property_->getColor();
+      marker.color.r = static_cast<float>(color.red()) / 255.0f;
+      marker.color.g = static_cast<float>(color.green()) / 255.0f;
+      marker.color.b = static_cast<float>(color.blue()) / 255.0f;
+    }
+    default:
+      break;
+  }
+  return marker;
+}
+
 void ConeArrayWithCovarianceDisplay::setMarkerArray(
     const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr &msg) {
   for (const auto &cone : msg->blue_cones) {
     setConeMarker(cone, msg->header, id_, &blue_cone_marker_);
     setCovarianceMarker(cone, msg->header, id_);
-    marker_array_.markers.push_back(blue_cone_marker_);
+    auto marker = getColoredMarker(blue_cone_marker_);
+    marker_array_.markers.push_back(marker);
     marker_array_.markers.push_back(covariance_marker_);
     id_++;
   }
   for (const auto &cone : msg->yellow_cones) {
     setConeMarker(cone, msg->header, id_, &yellow_cone_marker_);
     setCovarianceMarker(cone, msg->header, id_);
-    marker_array_.markers.push_back(yellow_cone_marker_);
+    auto marker = getColoredMarker(yellow_cone_marker_);
+    marker_array_.markers.push_back(marker);
     marker_array_.markers.push_back(covariance_marker_);
     id_++;
   }
   for (const auto &cone : msg->orange_cones) {
     setConeMarker(cone, msg->header, id_, &orange_cone_marker_);
     setCovarianceMarker(cone, msg->header, id_);
-    marker_array_.markers.push_back(orange_cone_marker_);
+    auto marker = getColoredMarker(orange_cone_marker_);
+    marker_array_.markers.push_back(marker);
     marker_array_.markers.push_back(covariance_marker_);
     id_++;
   }
   for (const auto &cone : msg->unknown_color_cones) {
     setConeMarker(cone, msg->header, id_, &unknown_cone_marker_);
     setCovarianceMarker(cone, msg->header, id_);
-    marker_array_.markers.push_back(unknown_cone_marker_);
+    auto marker = getColoredMarker(unknown_cone_marker_);
+    marker_array_.markers.push_back(marker);
     marker_array_.markers.push_back(covariance_marker_);
     id_++;
   }
   for (const auto &cone : msg->big_orange_cones) {
     setConeMarker(cone, msg->header, id_, &big_orange_cone_marker_);
     setCovarianceMarker(cone, msg->header, id_);
-    marker_array_.markers.push_back(big_orange_cone_marker_);
+    auto marker = getColoredMarker(big_orange_cone_marker_);
+    marker_array_.markers.push_back(marker);
     marker_array_.markers.push_back(covariance_marker_);
     id_++;
   }

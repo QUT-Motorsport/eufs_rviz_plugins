@@ -16,8 +16,8 @@
 namespace eufs_rviz_plugins {
 namespace displays {
 
-class WaypointArrayStampedDisplay
-    : public rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped> {
+class WaypointArrayStampedDisplay : public rviz_common::RosTopicDisplay<
+                                        eufs_msgs::msg::WaypointArrayStamped> {
   Q_OBJECT
 
  public:
@@ -34,9 +34,11 @@ class WaypointArrayStampedDisplay
  private:
   void initMarkers();
 
-  void setMarkerArray(const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
+  void setMarkerArray(
+      const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
 
-  void processMessage(eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr msg) override;
+  void processMessage(
+      eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr msg) override;
 
   visualization_msgs::msg::Marker CreateTrajectoryMarker(
       const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);

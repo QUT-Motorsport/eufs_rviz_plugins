@@ -20,7 +20,8 @@ namespace displays {
 enum ConeColorOption { CONE = 0, FLAT = 1 };
 
 class ConeArrayWithCovarianceDisplay
-    : public rviz_common::RosTopicDisplay<eufs_msgs::msg::ConeArrayWithCovariance> {
+    : public rviz_common::RosTopicDisplay<
+          eufs_msgs::msg::ConeArrayWithCovariance> {
   Q_OBJECT
 
  public:
@@ -44,14 +45,17 @@ class ConeArrayWithCovarianceDisplay
                      const std_msgs::msg::Header &header, const int &id,
                      visualization_msgs::msg::Marker *marker);
 
-  visualization_msgs::msg::Marker getColoredMarker(visualization_msgs::msg::Marker cone_marker);
+  visualization_msgs::msg::Marker getColoredMarker(
+      visualization_msgs::msg::Marker cone_marker);
 
   void setCovarianceMarker(const eufs_msgs::msg::ConeWithCovariance &cone,
                            const std_msgs::msg::Header &header, const int &id);
 
-  void setMarkerArray(const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr &msg);
+  void setMarkerArray(
+      const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr &msg);
 
-  void processMessage(eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr msg) override;
+  void processMessage(
+      eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr msg) override;
 
   int id_;
 

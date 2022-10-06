@@ -8,9 +8,11 @@ namespace displays {
 WaypointArrayStampedDisplay::WaypointArrayStampedDisplay()
     : rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped>(),
       id_(0),
-      marker_common_(std::make_unique<rviz_default_plugins::displays::MarkerCommon>(this)) {
-  color_property_ = new rviz_common::properties::ColorProperty("Color", QColor(100, 204, 153),
-                                                               "Color of waypoint array", this);
+      marker_common_(
+          std::make_unique<rviz_default_plugins::displays::MarkerCommon>(
+              this)) {
+  color_property_ = new rviz_common::properties::ColorProperty(
+      "Color", QColor(100, 204, 153), "Color of waypoint array", this);
 }
 
 void WaypointArrayStampedDisplay::onInitialize() {
@@ -18,7 +20,8 @@ void WaypointArrayStampedDisplay::onInitialize() {
   marker_common_->initialize(context_, scene_node_);
 
   topic_property_->setValue("/trajectory");
-  topic_property_->setDescription("eufs_msgs::msg::WaypointArrayStamped topic to subscribe to.");
+  topic_property_->setDescription(
+      "eufs_msgs::msg::WaypointArrayStamped topic to subscribe to.");
 
   initMarkers();
 }
@@ -34,12 +37,14 @@ void WaypointArrayStampedDisplay::processMessage(
   delete_all_marker_.id = id_;
   marker_array_.markers.push_back(delete_all_marker_);
 
-  marker_common_->addMessage(std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
+  marker_common_->addMessage(
+      std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
 
   marker_array_.markers.clear();
 
   setMarkerArray(msg);
-  marker_common_->addMessage(std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
+  marker_common_->addMessage(
+      std::make_shared<visualization_msgs::msg::MarkerArray>(marker_array_));
 
   marker_array_.markers.clear();
 }
@@ -57,7 +62,8 @@ void WaypointArrayStampedDisplay::initMarkers() {
   delete_all_marker_.action = visualization_msgs::msg::Marker::DELETEALL;
 }
 
-visualization_msgs::msg::Marker WaypointArrayStampedDisplay::CreateTrajectoryMarker(
+visualization_msgs::msg::Marker
+WaypointArrayStampedDisplay::CreateTrajectoryMarker(
     const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg) {
   visualization_msgs::msg::Marker trajectory_marker;
   trajectory_marker.action = visualization_msgs::msg::Marker::ADD;

@@ -6,7 +6,7 @@ namespace eufs_rviz_plugins {
 namespace displays {
 
 ConeArrayWithCovarianceDisplay::ConeArrayWithCovarianceDisplay()
-    : rviz_common::RosTopicDisplay<eufs_msgs::msg::ConeArrayWithCovariance>(),
+    : rviz_common::RosTopicDisplay<driverless_msgs::msg::ConeDetectionStamped>(),
       id_(0),
       marker_common_(
           std::make_unique<rviz_default_plugins::displays::MarkerCommon>(
@@ -42,7 +42,7 @@ void ConeArrayWithCovarianceDisplay::onInitialize() {
 
   topic_property_->setValue("/cones");
   topic_property_->setDescription(
-      "eufs_msgs::msg::ConeArrayWithCovariance topic to subscribe to.");
+      "driverless_msgs::msg::ConeDetectionStamped topic to subscribe to.");
 
   initMarkers();
 }
@@ -53,7 +53,7 @@ void ConeArrayWithCovarianceDisplay::load(const rviz_common::Config &config) {
 }
 
 void ConeArrayWithCovarianceDisplay::processMessage(
-    eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr msg) {
+    driverless_msgs::msg::ConeDetectionStamped::ConstSharedPtr msg) {
   delete_all_marker_.header = msg->header;
   delete_all_marker_.id = id_;
   marker_array_.markers.push_back(delete_all_marker_);
@@ -182,25 +182,25 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
 }
 
 void ConeArrayWithCovarianceDisplay::setConeMarker(
-    const eufs_msgs::msg::ConeWithCovariance &cone,
+    const driverless_msgs::msg::ConeWithCovariance &cone,
     const std_msgs::msg::Header &header, const int &id,
     visualization_msgs::msg::Marker *marker) {
   marker->id = id;
   marker->header = header;
-  marker->pose.position.x = cone.point.x;
-  marker->pose.position.y = cone.point.y;
-  marker->pose.position.z = cone.point.z;
+  marker->pose.position.x = cone.cone.location.x;
+  marker->pose.position.y = cone.cone.location.y;
+  marker->pose.position.z = cone.cone.location.z;
 }
 
 void ConeArrayWithCovarianceDisplay::setCovarianceMarker(
-    const eufs_msgs::msg::ConeWithCovariance &cone,
+    const driverless_msgs::msg::ConeWithCovariance &cone,
     const std_msgs::msg::Header &header, const int &id) {
   // https://www.visiondummy.com/2014/04/draw-error-ellipse-representing-covariance-matrix/
   covariance_marker_.id = id;
   covariance_marker_.header = header;
-  covariance_marker_.pose.position.x = cone.point.x;
-  covariance_marker_.pose.position.y = cone.point.y;
-  covariance_marker_.pose.position.z = cone.point.z;
+  covariance_marker_.pose.position.x = cone.cone.location.x;
+  covariance_marker_.pose.position.y = cone.cone.location.y;
+  covariance_marker_.pose.position.z = cone.cone.location.z;
 
   // Convert the covariance message to a matrix
   Eigen::Matrix2d cov_matrix;
@@ -245,43 +245,31 @@ ConeArrayWithCovarianceDisplay::getColoredMarker(
 }
 
 void ConeArrayWithCovarianceDisplay::setMarkerArray(
-    const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr &msg) {
-  for (const auto &cone : msg->blue_cones) {
-    setConeMarker(cone, msg->header, id_, &blue_cone_marker_);
+    const driverless_msgs::msg::ConeDetectionStamped::ConstSharedPtr &msg) {
+  for (const auto &cone : msg->cones_with_cov) {
+    
+    visualization_msgs::msg::Marker cone_marker;
+    switch (cone.cone.color)
+    {
+    case driverless_msgs::msg::Cone::BLUE:
+      cone_marker = blue_cone_marker_;
+      break;
+    case driverless_msgs::msg::Cone::YELLOW:
+      cone_marker = yellow_cone_marker_;
+      break;
+    case driverless_msgs::msg::Cone::ORANGE_BIG:
+      cone_marker = big_orange_cone_marker_;
+      break;
+    case driverless_msgs::msg::Cone::ORANGE_SMALL:
+      cone_marker = orange_cone_marker_;
+      break;
+    default:
+      cone_marker = unknown_cone_marker_;
+      break;
+    }
+    setConeMarker(cone, msg->header, id_, &cone_marker);
     setCovarianceMarker(cone, msg->header, id_);
-    auto marker = getColoredMarker(blue_cone_marker_);
-    marker_array_.markers.push_back(marker);
-    marker_array_.markers.push_back(covariance_marker_);
-    id_++;
-  }
-  for (const auto &cone : msg->yellow_cones) {
-    setConeMarker(cone, msg->header, id_, &yellow_cone_marker_);
-    setCovarianceMarker(cone, msg->header, id_);
-    auto marker = getColoredMarker(yellow_cone_marker_);
-    marker_array_.markers.push_back(marker);
-    marker_array_.markers.push_back(covariance_marker_);
-    id_++;
-  }
-  for (const auto &cone : msg->orange_cones) {
-    setConeMarker(cone, msg->header, id_, &orange_cone_marker_);
-    setCovarianceMarker(cone, msg->header, id_);
-    auto marker = getColoredMarker(orange_cone_marker_);
-    marker_array_.markers.push_back(marker);
-    marker_array_.markers.push_back(covariance_marker_);
-    id_++;
-  }
-  for (const auto &cone : msg->unknown_color_cones) {
-    setConeMarker(cone, msg->header, id_, &unknown_cone_marker_);
-    setCovarianceMarker(cone, msg->header, id_);
-    auto marker = getColoredMarker(unknown_cone_marker_);
-    marker_array_.markers.push_back(marker);
-    marker_array_.markers.push_back(covariance_marker_);
-    id_++;
-  }
-  for (const auto &cone : msg->big_orange_cones) {
-    setConeMarker(cone, msg->header, id_, &big_orange_cone_marker_);
-    setCovarianceMarker(cone, msg->header, id_);
-    auto marker = getColoredMarker(big_orange_cone_marker_);
+    auto marker = getColoredMarker(cone_marker);
     marker_array_.markers.push_back(marker);
     marker_array_.markers.push_back(covariance_marker_);
     id_++;

@@ -16,6 +16,7 @@
   <depend>std_msgs</depend>
   <depend>visualization_msgs</depend>
   <depend>eufs_msgs</depend>
+  <depend>driverless_msgs</depend>
   <depend>eigen</depend>
   <depend>geometry_msgs</depend>
   <depend>libqt5-widgets</depend>

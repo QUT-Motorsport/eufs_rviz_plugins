@@ -11,7 +11,8 @@
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
-#include "eufs_msgs/msg/cone_array_with_covariance.hpp"
+#include <driverless_msgs/msg/cone_detection_stamped.hpp>
+#include <driverless_msgs/msg/cone_with_covariance.hpp>
 #include "rviz_default_plugins/visibility_control.hpp"
 
 namespace eufs_rviz_plugins {
@@ -21,7 +22,7 @@ enum ConeColorOption { CONE = 0, FLAT = 1 };
 
 class ConeArrayWithCovarianceDisplay
     : public rviz_common::RosTopicDisplay<
-          eufs_msgs::msg::ConeArrayWithCovariance> {
+          driverless_msgs::msg::ConeDetectionStamped> {
   Q_OBJECT
 
  public:
@@ -41,21 +42,21 @@ private Q_SLOTS:
  private:
   void initMarkers();
 
-  void setConeMarker(const eufs_msgs::msg::ConeWithCovariance &cone,
+  void setConeMarker(const driverless_msgs::msg::ConeWithCovariance &cone,
                      const std_msgs::msg::Header &header, const int &id,
                      visualization_msgs::msg::Marker *marker);
 
   visualization_msgs::msg::Marker getColoredMarker(
       visualization_msgs::msg::Marker cone_marker);
 
-  void setCovarianceMarker(const eufs_msgs::msg::ConeWithCovariance &cone,
+  void setCovarianceMarker(const driverless_msgs::msg::ConeWithCovariance &cone,
                            const std_msgs::msg::Header &header, const int &id);
 
   void setMarkerArray(
-      const eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr &msg);
+      const driverless_msgs::msg::ConeDetectionStamped::ConstSharedPtr &msg);
 
   void processMessage(
-      eufs_msgs::msg::ConeArrayWithCovariance::ConstSharedPtr msg) override;
+      driverless_msgs::msg::ConeDetectionStamped::ConstSharedPtr msg) override;
 
   int id_;
 

@@ -13,6 +13,7 @@ find_package(rviz_common REQUIRED)
 find_package(rviz_default_plugins REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
+find_package(driverless_msgs REQUIRED)
 find_package(eufs_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(Eigen3 REQUIRED)
@@ -26,7 +27,8 @@ set(dependencies
         geometry_msgs
         std_msgs
         visualization_msgs
-        eufs_msgs)
+        eufs_msgs
+        driverless_msgs)
 
 set(sources
         src/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.cpp

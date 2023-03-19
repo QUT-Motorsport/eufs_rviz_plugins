@@ -34,8 +34,8 @@ set(sources
         src/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.cpp
         src/eufs_rviz_plugins/displays/waypoint_array_stamped/waypoint_array_stamped_display.cpp)
 
-qt5_wrap_cpp(qt_moc_files "include/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.hpp") 
-qt5_wrap_cpp(qt_moc_files "include/eufs_rviz_plugins/displays/waypoint_array_stamped/waypoint_array_stamped_display.hpp") 
+qt5_wrap_cpp(qt_moc_files "include/eufs_rviz_plugins/displays/cone_array_with_covariance/cone_array_with_covariance_display.hpp")
+qt5_wrap_cpp(qt_moc_files "include/eufs_rviz_plugins/displays/waypoint_array_stamped/waypoint_array_stamped_display.hpp")
 
 add_library(${PROJECT_NAME} SHARED
         ${qt_moc_files}

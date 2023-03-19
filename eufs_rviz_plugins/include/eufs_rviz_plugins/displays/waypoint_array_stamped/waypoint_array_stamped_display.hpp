@@ -16,41 +16,38 @@
 namespace eufs_rviz_plugins {
 namespace displays {
 
-class WaypointArrayStampedDisplay : public rviz_common::RosTopicDisplay<
-                                        eufs_msgs::msg::WaypointArrayStamped> {
-  Q_OBJECT
+class WaypointArrayStampedDisplay : public rviz_common::RosTopicDisplay<eufs_msgs::msg::WaypointArrayStamped> {
+    Q_OBJECT
 
- public:
-  WaypointArrayStampedDisplay();
+   public:
+    WaypointArrayStampedDisplay();
 
-  void onInitialize() override;
+    void onInitialize() override;
 
-  void load(const rviz_common::Config &config) override;
+    void load(const rviz_common::Config &config) override;
 
-  void update(float wall_dt, float ros_dt) override;
+    void update(float wall_dt, float ros_dt) override;
 
-  void reset() override;
+    void reset() override;
 
- private:
-  void initMarkers();
+   private:
+    void initMarkers();
 
-  void setMarkerArray(
-      const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
+    void setMarkerArray(const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
 
-  void processMessage(
-      eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr msg) override;
+    void processMessage(eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr msg) override;
 
-  visualization_msgs::msg::Marker CreateTrajectoryMarker(
-      const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
+    visualization_msgs::msg::Marker CreateTrajectoryMarker(
+        const eufs_msgs::msg::WaypointArrayStamped::ConstSharedPtr &msg);
 
-  int id_;
+    int id_;
 
-  rviz_common::properties::ColorProperty *color_property_;
+    rviz_common::properties::ColorProperty *color_property_;
 
-  std::unique_ptr<rviz_default_plugins::displays::MarkerCommon> marker_common_;
+    std::unique_ptr<rviz_default_plugins::displays::MarkerCommon> marker_common_;
 
-  visualization_msgs::msg::Marker delete_all_marker_;
-  visualization_msgs::msg::MarkerArray marker_array_;
+    visualization_msgs::msg::Marker delete_all_marker_;
+    visualization_msgs::msg::MarkerArray marker_array_;
 };
 
 }  // namespace displays

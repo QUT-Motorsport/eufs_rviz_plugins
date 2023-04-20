@@ -40,7 +40,7 @@ class ConeArrayWithCovarianceDisplay : public rviz_common::RosTopicDisplay<drive
    private:
     void initMarkers();
 
-    void setConeMarker(const driverless_msgs::msg::ConeWithCovariance &cone, const std_msgs::msg::Header &header,
+    void setConeMarker(const driverless_msgs::msg::Cone &cone, const std_msgs::msg::Header &header,
                        const int &id, visualization_msgs::msg::Marker *marker);
 
     visualization_msgs::msg::Marker getColoredMarker(visualization_msgs::msg::Marker cone_marker);

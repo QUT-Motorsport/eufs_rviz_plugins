@@ -166,14 +166,14 @@ void ConeArrayWithCovarianceDisplay::initMarkers() {
     covariance_marker_.ns = "covariance";
 }
 
-void ConeArrayWithCovarianceDisplay::setConeMarker(const driverless_msgs::msg::ConeWithCovariance &cone,
+void ConeArrayWithCovarianceDisplay::setConeMarker(const driverless_msgs::msg::Cone &cone,
                                                    const std_msgs::msg::Header &header, const int &id,
                                                    visualization_msgs::msg::Marker *marker) {
     marker->id = id;
     marker->header = header;
-    marker->pose.position.x = cone.cone.location.x;
-    marker->pose.position.y = cone.cone.location.y;
-    marker->pose.position.z = cone.cone.location.z;
+    marker->pose.position.x = cone.location.x;
+    marker->pose.position.y = cone.location.y;
+    marker->pose.position.z = cone.location.z;
 }
 
 void ConeArrayWithCovarianceDisplay::setCovarianceMarker(const driverless_msgs::msg::ConeWithCovariance &cone,
@@ -245,8 +245,33 @@ void ConeArrayWithCovarianceDisplay::setMarkerArray(
                 cone_marker = unknown_cone_marker_;
                 break;
         }
-        setConeMarker(cone, msg->header, id_, &cone_marker);
+        setConeMarker(cone.cone, msg->header, id_, &cone_marker);
         setCovarianceMarker(cone, msg->header, id_);
+        auto marker = getColoredMarker(cone_marker);
+        marker_array_.markers.push_back(marker);
+        marker_array_.markers.push_back(covariance_marker_);
+        id_++;
+    }
+    for (const auto &cone : msg->cones) {
+        visualization_msgs::msg::Marker cone_marker;
+        switch (cone.color) {
+            case driverless_msgs::msg::Cone::BLUE:
+                cone_marker = blue_cone_marker_;
+                break;
+            case driverless_msgs::msg::Cone::YELLOW:
+                cone_marker = yellow_cone_marker_;
+                break;
+            case driverless_msgs::msg::Cone::ORANGE_BIG:
+                cone_marker = big_orange_cone_marker_;
+                break;
+            case driverless_msgs::msg::Cone::ORANGE_SMALL:
+                cone_marker = orange_cone_marker_;
+                break;
+            default:
+                cone_marker = unknown_cone_marker_;
+                break;
+        }
+        setConeMarker(cone, msg->header, id_, &cone_marker);
         auto marker = getColoredMarker(cone_marker);
         marker_array_.markers.push_back(marker);
         marker_array_.markers.push_back(covariance_marker_);

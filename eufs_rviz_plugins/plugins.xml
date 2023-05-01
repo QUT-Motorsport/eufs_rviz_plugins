@@ -10,14 +10,4 @@
         </description>
     </class>
 
-    <class
-        name="eufs_rviz_plugins/WaypointArrayStamped"
-        type="eufs_rviz_plugins::displays::WaypointArrayStampedDisplay"
-        base_class_type="rviz_common::Display"
-    >
-        <description>
-            Displays a waypoint array based on a waypoint array stamped message.
-        </description>
-    </class>
-
 </library>
